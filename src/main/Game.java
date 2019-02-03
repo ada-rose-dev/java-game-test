@@ -12,8 +12,15 @@ public class Game extends Canvas implements Runnable {
     private Thread thread;
     private boolean running = false;
 
+    private Handler handler;
+
     public Game() {
-        new Window(WIDTH,HEIGHT,"This is a game!!", this);
+        //Handler before window to prevent null pointer
+        handler = new Handler();
+        this.addKeyListener(new KeyInput(handler));
+        new Window(WIDTH, HEIGHT, "This is a game!!", this);
+
+        handler.addObj(new Player(64,64,ID.Player)); //Automate ID in the future.
     }
 
     public synchronized void start() {
@@ -76,7 +83,7 @@ public class Game extends Canvas implements Runnable {
     }
 
     private void tick() {
-
+        handler.tick();
     }
 
     private void render() {
@@ -91,6 +98,9 @@ public class Game extends Canvas implements Runnable {
         //Draw background
         g.setColor(Color.black);
         g.fillRect(0,0,WIDTH,HEIGHT);
+
+        //Handler
+        handler.render(g);
 
         g.dispose();
         bs.show();
