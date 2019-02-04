@@ -54,9 +54,9 @@ public Player (int x, int y, ID id) {
 
     private void move(int key) {
         if (key == KeyEvent.VK_UP)
-            y += yspd;
-        if (key == KeyEvent.VK_DOWN)
             y -= yspd;
+        if (key == KeyEvent.VK_DOWN)
+            y += yspd;
         if (key == KeyEvent.VK_LEFT)
             x -= xspd;
         if (key == KeyEvent.VK_RIGHT)
