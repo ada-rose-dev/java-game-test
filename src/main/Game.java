@@ -1,6 +1,7 @@
 package main;
 
 import java.awt.*;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferStrategy;
 
 public class Game extends Canvas implements Runnable {
@@ -13,11 +14,13 @@ public class Game extends Canvas implements Runnable {
     private boolean running = false;
 
     private Handler handler;
+    private KeyInput keys;
 
     public Game() {
         //Handler before window to prevent null pointer
         handler = new Handler();
-        this.addKeyListener(new KeyInput(handler));
+        keys = new KeyInput(handler);
+        this.addKeyListener(keys);
         new Window(WIDTH, HEIGHT, "This is a game!!", this);
 
         handler.addObj(new Player(64,64,ID.Player)); //Automate ID in the future.
@@ -84,6 +87,7 @@ public class Game extends Canvas implements Runnable {
 
     private void tick() {
         handler.tick();
+        keys.tick();
     }
 
     private void render() {

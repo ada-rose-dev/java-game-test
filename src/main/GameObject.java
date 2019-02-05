@@ -1,7 +1,6 @@
 package main;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
 
 public abstract class GameObject {
 
@@ -19,8 +18,9 @@ public abstract class GameObject {
 
     public abstract void render(Graphics g);
 
-    public abstract boolean ListensForKey(KeyEvent e);
-    public abstract void ExecuteKeyEvent(KeyEvent e);
+    public abstract void KeyHeld(int e);
+    public abstract void KeyPressed(int e);
+    public abstract void KeyReleased(int e);
 
     public int getX() {
         return x;
