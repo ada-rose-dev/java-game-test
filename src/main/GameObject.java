@@ -19,8 +19,9 @@ public abstract class GameObject {
 
     public abstract void render(Graphics g);
 
-    public abstract boolean ListensForKey(KeyEvent e);
-    public abstract void ExecuteKeyEvent(KeyEvent e);
+    public abstract void KeyHeld(KeyEvent e);
+    public abstract void KeyPressed(KeyEvent e);
+    public abstract void KeyReleased(KeyEvent e);
 
     public int getX() {
         return x;

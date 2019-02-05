@@ -10,78 +10,91 @@ public class KeyInput extends KeyAdapter {
 
     private Handler handler;
 
-    //Key press bools
-    protected boolean upP;
-    protected boolean downP;
-    protected boolean leftP;
-    protected boolean rightP;
+    /* * * * * * * * * * * * * * * * * * * * * * *
+    * trackedKey Array Set-up and Helper Methods
+    * * * * * * * * * * * * * * * * * * * * * * * */
+    private int numTrackedKeys = 4;
 
+    //Array to hold keys we want to keep track of. This will make things easier later.
+    protected KeyTuple[] trackedKeys = new KeyTuple[numTrackedKeys];
+
+    private void initKeys() {
+        trackedKeys[0] = new KeyTuple("up", KeyEvent.VK_UP);
+        trackedKeys[1] = new KeyTuple("down", KeyEvent.VK_DOWN);
+        trackedKeys[2] = new KeyTuple("left", KeyEvent.VK_LEFT);
+        trackedKeys[3] = new KeyTuple("right", KeyEvent.VK_RIGHT);
+    }
+    private KeyTuple getKey(String name) {
+        for (var i = 0; i < trackedKeys.length; i++) {
+            if (trackedKeys[i].name == name)
+                return trackedKeys[i];
+        }
+        return KeyTuple.undefined;
+    }
+    private boolean isHeld(KeyEvent e) {
+        var code = e.getKeyCode();
+        for (var i = 0; i < trackedKeys.length; i++) {
+            if (trackedKeys[i].code == code) {
+                return trackedKeys[i].held;
+            }
+        }
+        return false; //If undefined it will not be held.
+    }
+    private boolean setHeld(KeyEvent e, boolean val) {
+        var code = e.getKeyCode();
+        for (var i = 0; i < trackedKeys.length; i++) {
+            if (trackedKeys[i].code == code) {
+                trackedKeys[i].held = val;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /* * * * * * * *
+    * Main Functions
+    * * * * * * * * */
 
     public KeyInput(Handler handler) {
         this.handler = handler;
+        initKeys();
     }
 
     public void keyPressed (KeyEvent e) {
 
         for (var i = 0; i < handler.objList.size(); i++) {
+            //Get game object.
             GameObject temp = handler.objList.get(i);
-            if (temp.ListensForKey(e)) {
-                temp.ExecuteKeyEvent(e);
+            //Execute event.
+            if (!isHeld(e)) {
+                //System.out.println("Executing KeyPressed in Game Obj id="+temp.id);
+                temp.KeyPressed(e);
+            }
+            else {
+                //System.out.println("Executing KeyHeld in Game Obj id="+temp.id);
+                temp.KeyHeld(e);
             }
         }
-
+        //Set held. It should be false when this is called the first time, as set in the release and init methods.
+        setHeld(e, true);
     }
 
     public void keyReleased(KeyEvent e) {
-        for (var i = 0; i < handler.objList.size(); i++) {
-            GameObject temp = handler.objList.get(i);
-            if (isPressed(e) && temp.ListensForKey(e)) {
-                temp.ExecuteKeyEvent(e);
+        //Perform key event as long as the key is held. Stop on release.
+        //This is where we call key released methods.
+        if (isHeld(e)) {
+            for (var i = 0; i < handler.objList.size(); i++) {
+                GameObject temp = handler.objList.get(i);
+                if (isHeld(e)) {
+                    //System.out.println("Executing KeyHeld in Game Obj id="+temp.id);
+                    temp.KeyHeld(e);
+                }
+                //System.out.println("Executing KeyReleased in Game Obj id="+temp.id);
+                temp.KeyReleased(e);
             }
         }
-
+        setHeld(e, false);
     }
 
-    /*
-    * Why use helper functions here?
-    * Allows for easier keymapping later on. Can replace the KeyEvent's with variables later on.
-     */
 
-    public boolean isPressed(KeyEvent e) {
-        var key = e.getKeyCode();
-        switch (key) {
-            default: return false;
-            case (KeyEvent.VK_UP):
-                return upP;
-            case (KeyEvent.VK_DOWN):
-                return downP;
-            case (KeyEvent.VK_LEFT):
-                return leftP;
-            case (KeyEvent.VK_RIGHT):
-                return rightP;
-
-        }
-
-    }
-    private boolean setPressed(KeyEvent e, boolean val) {
-        var key = e.getKeyCode();
-
-        switch (key) {
-            case (KeyEvent.VK_UP):
-                upP = true;
-                return true;
-            case (KeyEvent.VK_DOWN):
-                downP = true;
-                return true;
-            case (KeyEvent.VK_LEFT):
-                leftP = true;
-                return true;
-            case (KeyEvent.VK_RIGHT):
-                rightP = true;
-                return true;
-
-            default: return false;
-        }
-
-    }
 }

@@ -1,6 +1,7 @@
 package main;
 
 import java.awt.*;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferStrategy;
 
 public class Game extends Canvas implements Runnable {
@@ -84,6 +85,8 @@ public class Game extends Canvas implements Runnable {
 
     private void tick() {
         handler.tick();
+        KeyListener[] arr = this.getKeyListeners();
+        KeyListener kl = arr[0];
     }
 
     private void render() {
