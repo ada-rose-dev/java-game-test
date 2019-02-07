@@ -1,65 +1,68 @@
 package main;
 
-import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
 
 public class Player extends GameObject {
 
+    /* * * * *
+    * INIT
+    * * * * * */
     public Color col = Color.white;
+    public float xspd, yspd;
 
-    public Player (int x, int y, ID id) {
-        super(x,y,id);
-        xspd = 1;
-        yspd = 1;
+    public Player (int x, int y, Handler handler) {
+        super(x,y,handler);
+        xspd = 1f;
+        yspd = 1f;
     }
 
-    @Override
+    /* * * * * * * * *
+    * TICK !!!!
+    * * * * * * * * * */
     public void tick() {
 
-
-
-
     }
+    /* * * * * * * *
+    * RENDER !!!!
+    * * * * * * * */
     public void render(Graphics g) {
         g.setColor(col);
         g.fillRect(x,y,16,16);
     }
 
     /* * * * * * * * * * * * *
-    * KEYBOARD METHODS
+    * KEYBOARD ROUTERS !!!!!
     * * * * * * * * * * * * */
-    public void KeyHeld(int e) {
-        var key = e;
-        switch (key) {
+    public void KeyHeld(String name) {
+        switch (name) {
+            //Do nothing on default
             default: return;
-            case KeyEvent.VK_UP:
-            case KeyEvent.VK_DOWN:
-            case KeyEvent.VK_LEFT:
-            case KeyEvent.VK_RIGHT:
-                move(key); break;
+            //Movement - extracted code so we can make it more complicated later on.
+            case"left": case "right": case"up": case"down":
+                move(name);
+            //End game
+            case "escape":
+                Game.end(); break;
         }
-        col = Color.green;
     }
-    public void KeyPressed(int e) {
-        col = Color.blue;
+    public void KeyPressed(String name) {
     }
-    public void KeyReleased(int e) {
-        col = Color.yellow;
+    public void KeyReleased(String name) {
     }
 
-
-
-    private void move(int key) {
-        if (key == KeyEvent.VK_UP)
-            y -= yspd;
-        if (key == KeyEvent.VK_DOWN)
-            y += yspd;
-        if (key == KeyEvent.VK_LEFT)
-            x -= xspd;
-        if (key == KeyEvent.VK_RIGHT)
-            x += xspd;
-
-
+    /* * * * * * * * * * *
+    * ACTUAL GAME METHODS  !!!!!
+    * * * * * * * * * * */
+    private void move(String key) {
+        switch (key) {
+            case "up":
+                y -= yspd; break;
+            case "down":
+                y += yspd; break;
+            case "left":
+                x -= xspd; break;
+            case "right":
+                x += xspd; break;
+        }
     }
 }

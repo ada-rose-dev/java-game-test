@@ -1,7 +1,6 @@
 package main;
 
 import java.awt.*;
-import java.awt.event.KeyListener;
 import java.awt.image.BufferStrategy;
 
 public class Game extends Canvas implements Runnable {
@@ -9,6 +8,7 @@ public class Game extends Canvas implements Runnable {
     public static final long serialVersionUID = 42L;
 
     public static final int WIDTH = 640, HEIGHT = WIDTH * 9 / 16;
+    public static final String gameTitle = "Ada makes a game engine.";
 
     private Thread thread;
     private boolean running = false;
@@ -21,9 +21,11 @@ public class Game extends Canvas implements Runnable {
         handler = new Handler();
         keys = new KeyInput(handler);
         this.addKeyListener(keys);
-        new Window(WIDTH, HEIGHT, "This is a game!!", this);
+        new Window(WIDTH, HEIGHT, gameTitle, this);
+    }
 
-        handler.addObj(new Player(64,64,ID.Player)); //Automate ID in the future.
+    public static synchronized void end() {
+        System.exit(0);
     }
 
     public synchronized void start() {
@@ -78,7 +80,7 @@ public class Game extends Canvas implements Runnable {
 
             if(System.currentTimeMillis() - timer > 1000) {
                 timer += 1000;
-                System.out.println("FPS: "+ frames);
+                //System.out.println("FPS: "+ frames);
                 frames = 0;
             }
         }
