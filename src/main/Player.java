@@ -1,67 +1,68 @@
 package main;
 
-import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
 
 public class Player extends GameObject {
-public Player (int x, int y, ID id) {
-        super(x,y,id);
-        xspd = 1;
-        yspd = 1;
+
+    /* * * * *
+    * INIT
+    * * * * * */
+    public Color col = Color.white;
+    public float xspd, yspd;
+
+    public Player (int x, int y, Handler handler) {
+        super(x,y,handler);
+        xspd = 1f;
+        yspd = 1f;
     }
 
-    @Override
+    /* * * * * * * * *
+    * TICK !!!!
+    * * * * * * * * * */
     public void tick() {
 
-
-
-
     }
+    /* * * * * * * *
+    * RENDER !!!!
+    * * * * * * * */
     public void render(Graphics g) {
-        g.setColor(Color.white);
+        g.setColor(col);
         g.fillRect(x,y,16,16);
     }
 
-    //This may be unnecessary.
-    public boolean ListensForKey(KeyEvent e) {
-        var key = e.getKeyCode();
-        switch(key) {
-            case KeyEvent.VK_UP:
-            case KeyEvent.VK_DOWN:
-            case KeyEvent.VK_LEFT:
-            case KeyEvent.VK_RIGHT:
-                return true;
-
-            default: return false;
-        }
-    }
-
-    //Separate this into multiple functions.
-    public void ExecuteKeyEvent(KeyEvent e) {
-        var key = e.getKeyCode();
-        switch (key) {
+    /* * * * * * * * * * * * *
+    * KEYBOARD ROUTERS !!!!!
+    * * * * * * * * * * * * */
+    public void KeyHeld(String name) {
+        switch (name) {
+            //Do nothing on default
             default: return;
-            case KeyEvent.VK_UP:
-            case KeyEvent.VK_DOWN:
-            case KeyEvent.VK_LEFT:
-            case KeyEvent.VK_RIGHT:
-                move(key); break;
-
+            //Movement - extracted code so we can make it more complicated later on.
+            case"left": case "right": case"up": case"down":
+                move(name);
+            //End game
+            case "escape":
+                Game.end(); break;
         }
     }
+    public void KeyPressed(String name) {
+    }
+    public void KeyReleased(String name) {
+    }
 
-
-    private void move(int key) {
-        if (key == KeyEvent.VK_UP)
-            y -= yspd;
-        if (key == KeyEvent.VK_DOWN)
-            y += yspd;
-        if (key == KeyEvent.VK_LEFT)
-            x -= xspd;
-        if (key == KeyEvent.VK_RIGHT)
-            x += xspd;
-
-
+    /* * * * * * * * * * *
+    * ACTUAL GAME METHODS  !!!!!
+    * * * * * * * * * * */
+    private void move(String key) {
+        switch (key) {
+            case "up":
+                y -= yspd; break;
+            case "down":
+                y += yspd; break;
+            case "left":
+                x -= xspd; break;
+            case "right":
+                x += xspd; break;
+        }
     }
 }

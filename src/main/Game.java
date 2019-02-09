@@ -8,19 +8,24 @@ public class Game extends Canvas implements Runnable {
     public static final long serialVersionUID = 42L;
 
     public static final int WIDTH = 640, HEIGHT = WIDTH * 9 / 16;
+    public static final String gameTitle = "Ada makes a game engine.";
 
     private Thread thread;
     private boolean running = false;
 
     private Handler handler;
+    private KeyInput keys;
 
     public Game() {
         //Handler before window to prevent null pointer
         handler = new Handler();
-        this.addKeyListener(new KeyInput(handler));
-        new Window(WIDTH, HEIGHT, "This is a game!!", this);
+        keys = new KeyInput(handler);
+        this.addKeyListener(keys);
+        new Window(WIDTH, HEIGHT, gameTitle, this);
+    }
 
-        handler.addObj(new Player(64,64,ID.Player)); //Automate ID in the future.
+    public static synchronized void end() {
+        System.exit(0);
     }
 
     public synchronized void start() {
@@ -75,7 +80,7 @@ public class Game extends Canvas implements Runnable {
 
             if(System.currentTimeMillis() - timer > 1000) {
                 timer += 1000;
-                System.out.println("FPS: "+ frames);
+                //System.out.println("FPS: "+ frames);
                 frames = 0;
             }
         }
@@ -84,6 +89,7 @@ public class Game extends Canvas implements Runnable {
 
     private void tick() {
         handler.tick();
+        keys.tick();
     }
 
     private void render() {
