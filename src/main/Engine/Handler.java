@@ -1,4 +1,4 @@
-package main;
+package main.Engine;
 
 import java.awt.*;
 import java.util.LinkedList;
@@ -30,6 +30,11 @@ public class Handler {
     }
     public void rmvObj(GameObject obj) {
         this.objList.remove(obj);
+    }
+
+    //Handle rooms
+    public void initRooms() {
+
     }
 
 }

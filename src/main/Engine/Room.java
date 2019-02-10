@@ -1,4 +1,4 @@
-package main;
+package main.Engine;
 
 //This class will handle rendering of "rooms", or game scenes.
 //TODO: Figure out how this will work, start implementation.
