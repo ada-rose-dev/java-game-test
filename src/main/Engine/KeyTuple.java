@@ -1,4 +1,4 @@
-package main;
+package main.Engine;
 
 //simple tuple class. May need to implement comparison and etc. later on.
 public class KeyTuple {

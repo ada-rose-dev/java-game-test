@@ -1,4 +1,4 @@
-package main;
+package main.Engine;
 
 import java.awt.*;
 import java.awt.image.BufferStrategy;
@@ -33,6 +33,7 @@ public class Game extends Canvas implements Runnable {
         thread = new Thread(this);
         thread.start();
         running = true;
+        handler.initRooms();
     }
 
     public synchronized void stop() {

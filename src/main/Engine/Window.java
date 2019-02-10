@@ -1,4 +1,4 @@
-package main;
+package main.Engine;
 
 import javax.swing.*;
 import java.awt.*;

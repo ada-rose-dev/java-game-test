@@ -1,4 +1,8 @@
-package main;
+package main.Objects;
+
+import main.Engine.Game;
+import main.Engine.GameObject;
+import main.Engine.Handler;
 
 import java.awt.*;
 
