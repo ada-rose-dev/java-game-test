@@ -43,7 +43,7 @@ public class Player extends GameObject {
             default: return;
             //Movement - extracted code so we can make it more complicated later on.
             case"left": case "right": case"up": case"down":
-                move(name);
+                move(name); break;
             //End game
             case "escape":
                 Game.end(); break;

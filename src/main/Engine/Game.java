@@ -1,5 +1,7 @@
 package main.Engine;
 
+import main.Objects.Player;
+
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 
@@ -22,10 +24,11 @@ public class Game extends Canvas implements Runnable {
         keys = new KeyInput(handler);
         this.addKeyListener(keys);
         new Window(WIDTH, HEIGHT, gameTitle, this);
+        handler.addObj(new Player(0,0, handler));
     }
 
     public static synchronized void end() {
-        System.exit(0);
+        System.exit(1); //Status 1 lets us know the game was ended via code.
     }
 
     public synchronized void start() {
@@ -41,31 +44,76 @@ public class Game extends Canvas implements Runnable {
         try {
             thread.join();
             running = false;
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+        end();
+
+        /*
         thread = new Thread(this);
         thread.start();
-
+*/
     }
 
 
     public void run() {
-        /*
+        int ticksPerSec = 25; //Max framerate for game engine
+        int skipTicks = 1000/ticksPerSec; //Ticks skipped per render frame
+        int maxFrameSkip = 5; //Maximum skipped frames
+
+        long nextGameTick = System.currentTimeMillis();
+        int loops;
+        float interpolation;
+
+        //Game loop
+        boolean running = true;
+        while (running) {
+            //Reset loops
+            loops = 0;
+
+            //Make sure you're processing game data as much as you need to before rendering,
+            //but dont skip more than maxFrameSkip times until you render
+            long ms = System.currentTimeMillis();
+            while( ms > nextGameTick && loops < maxFrameSkip) {
+                tick();
+
+                nextGameTick += skipTicks;
+                loops++;
+                ms = System.currentTimeMillis();
+            }
+
+            //This should, ideally, balance out to 1
+            //i.e. System.currentTimeMillis() should == nextGameTick
+            //This is unlikely in heavier game loads, so we interpolate the graphics accordingly
+            interpolation = (float)(System.currentTimeMillis() + skipTicks - nextGameTick) / (float)(skipTicks);
+            System.out.println(interpolation);
+            render(interpolation);
+
+
+
+        }
+
+        //End the game.
+        stop();
+
+/*
+        */
+/*
         * Set up game loop
-         */
+         *//*
+
         long LastTime = System.nanoTime();
         double amountOfTicks = 60.0;
         double ns = 1000000000 / amountOfTicks;
         double delta = 0;
         long timer = System.currentTimeMillis();
         int frames = 0;
-        /*
+        */
+/*
         * GAME LOOP
-         */
+         *//*
+
         while (running) {
             long now = System.nanoTime();
             delta += (now - LastTime) / ns;
@@ -81,11 +129,12 @@ public class Game extends Canvas implements Runnable {
 
             if(System.currentTimeMillis() - timer > 1000) {
                 timer += 1000;
-                //System.out.println("FPS: "+ frames);
+                System.out.println("FPS: "+ frames);
                 frames = 0;
             }
         }
         stop();
+*/
     }
 
     private void tick() {
@@ -93,7 +142,7 @@ public class Game extends Canvas implements Runnable {
         keys.tick();
     }
 
-    private void render() {
+    private void render(float interpolation) {
         BufferStrategy bs = this.getBufferStrategy();
         if (bs == null) {
             this.createBufferStrategy(3);
