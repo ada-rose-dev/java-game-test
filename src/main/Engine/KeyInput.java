@@ -2,6 +2,7 @@ package main.Engine;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.LinkedList;
 
 public class KeyInput extends KeyAdapter {
 
@@ -10,47 +11,50 @@ public class KeyInput extends KeyAdapter {
     /* * * * * * * * * * * * * * * * * * * * * * *
     * trackedKey Array Set-up and Helper Methods
     * * * * * * * * * * * * * * * * * * * * * * * */
-    private int numTrackedKeys = 5;
+    LinkedList<KeyTuple> keyList = new LinkedList<>();
 
     //Array to hold keys we want to keep track of. This will make things easier later.
-    protected KeyTuple[] trackedKeys = new KeyTuple[numTrackedKeys];
+
 
     private void initKeys() {
-        trackedKeys[0] = new KeyTuple("up", KeyEvent.VK_UP);
-        trackedKeys[1] = new KeyTuple("down", KeyEvent.VK_DOWN);
-        trackedKeys[2] = new KeyTuple("left", KeyEvent.VK_LEFT);
-        trackedKeys[3] = new KeyTuple("right", KeyEvent.VK_RIGHT);
-        trackedKeys[4] = new KeyTuple("escape", KeyEvent.VK_ESCAPE);
+        keyList.push(new KeyTuple("up", KeyEvent.VK_UP));
+        keyList.push(new KeyTuple("down", KeyEvent.VK_DOWN));
+        keyList.push(new KeyTuple("left", KeyEvent.VK_LEFT));
+        keyList.push(new KeyTuple("right", KeyEvent.VK_RIGHT));
+        keyList.push(new KeyTuple("escape", KeyEvent.VK_ESCAPE));
+        keyList.push(new KeyTuple("tilde",KeyEvent.VK_DEAD_TILDE));
+        keyList.push(new KeyTuple("control",KeyEvent.VK_CONTROL));
+        keyList.push(new KeyTuple("r",KeyEvent.VK_R));
     }
     private KeyTuple getKey(String name) {
-        for (var i = 0; i < trackedKeys.length; i++) {
-            if (trackedKeys[i].name == name)
-                return trackedKeys[i];
+        for (var i = 0; i < keyList.size(); i++) {
+            if (keyList.get(i).name == name)
+                return keyList.get(i);
         }
         return KeyTuple.undefined;
     }
     private String getName(KeyEvent e) {
-        for (var i = 0; i < trackedKeys.length; i++) {
-            if (trackedKeys[i].code == e.getKeyCode()) {
-                return trackedKeys[i].name;
+        for (var i = 0; i < keyList.size(); i++) {
+            if (keyList.get(i).code == e.getKeyCode()) {
+                return keyList.get(i).name;
             }
         }
         return "Undefined";
     }
     private boolean isHeld(KeyEvent e) {
         var code = e.getKeyCode();
-        for (var i = 0; i < trackedKeys.length; i++) {
-            if (trackedKeys[i].code == code) {
-                return trackedKeys[i].held;
+        for (var i = 0; i < keyList.size(); i++) {
+            if (keyList.get(i).code == code) {
+                return keyList.get(i).held;
             }
         }
         return false; //If undefined it will not be held.
     }
     private boolean setHeld(KeyEvent e, boolean val) {
         var code = e.getKeyCode();
-        for (var i = 0; i < trackedKeys.length; i++) {
-            if (trackedKeys[i].code == code) {
-                trackedKeys[i].held = val;
+        for (var i = 0; i < keyList.size(); i++) {
+            if (keyList.get(i).code == code) {
+                keyList.get(i).held = val;
                 return true;
             }
         }
@@ -67,11 +71,11 @@ public class KeyInput extends KeyAdapter {
     }
 
     public void tick() {
-        for (var i = 0; i < trackedKeys.length; i++) {
-            if (trackedKeys[i].held) {
+        for (var i = 0; i < keyList.size(); i++) {
+            if (keyList.get(i).held) {
                 for (var j = 0; j < handler.objList.size(); j++) {
                     var temp = handler.objList.get(j);
-                    var name = trackedKeys[i].name;
+                    var name = keyList.get(i).name;
                     temp.KeyHeld(name);
                 }
             }

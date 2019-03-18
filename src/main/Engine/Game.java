@@ -1,6 +1,10 @@
 package main.Engine;
 
+import main.Objects.RoomEditor;
+import main.Objects.Player;
+
 import java.awt.*;
+import java.awt.event.WindowListener;
 import java.awt.image.BufferStrategy;
 
 public class Game extends Canvas implements Runnable {
@@ -22,6 +26,8 @@ public class Game extends Canvas implements Runnable {
         keys = new KeyInput(handler);
         this.addKeyListener(keys);
         new Window(WIDTH, HEIGHT, gameTitle, this);
+
+        start();
     }
 
     public static synchronized void end() {
@@ -33,6 +39,8 @@ public class Game extends Canvas implements Runnable {
         thread = new Thread(this);
         thread.start();
         running = true;
+        handler.addObj(new Player(64,64,handler));
+        handler.addObj(new RoomEditor(handler)); //Comment this out on release!!!
         handler.initRooms();
     }
 
@@ -81,7 +89,7 @@ public class Game extends Canvas implements Runnable {
 
             if(System.currentTimeMillis() - timer > 1000) {
                 timer += 1000;
-                //System.out.println("FPS: "+ frames);
+                System.out.println("FPS: "+ frames);
                 frames = 0;
             }
         }
