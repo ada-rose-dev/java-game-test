@@ -25,6 +25,7 @@ public class KeyInput extends KeyAdapter {
         keyList.push(new KeyTuple("tilde",KeyEvent.VK_DEAD_TILDE));
         keyList.push(new KeyTuple("control",KeyEvent.VK_CONTROL));
         keyList.push(new KeyTuple("r",KeyEvent.VK_R));
+        keyList.push(new KeyTuple("w",KeyEvent.VK_W));
     }
     private KeyTuple getKey(String name) {
         for (var i = 0; i < keyList.size(); i++) {
